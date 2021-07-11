@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${APP_NAME}
+  namespace: ${NAMESPACE}
+spec:
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: ${MAX_UNAVAILABLE}
+      maxSurge: ${MAX_SURGE}
+  progressDeadlineSeconds: ${PROGRESS_DEADLINE_SECONDS}
+  replicas: ${REPLICAS}
+  selector:
+    matchLabels:
+      app: ${APP_NAME}
+  template:
+    metadata:
+      labels:
+        app: ${APP_NAME}
+    spec:
+      containers:
+        - name: ${APP_NAME}
+          image: ${DOCKER_REGISTRY_URL}/${APP_NAME}:${ENV}-${VERSION_NUMBER}
+          resources:
+            requests:
+              cpu: ${CPU_REQ}
+              memory: ${MEMORY_REQ}
+            limits:
+              cpu: ${CPU_LIM}
+              memory: ${MEMORY_LIM}
+          ports:
+            - containerPort: ${CONTAINER_PORT}
